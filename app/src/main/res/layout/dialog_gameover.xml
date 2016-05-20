@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/image"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp" >
+
+        <Button
+            android:id="@+id/dialogButtonMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back_to_menu"
+            style="@style/dialog_button"
+            />
+
+        <Button
+            android:id="@+id/dialogButtonAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/again_please"
+            android:layout_toRightOf="@+id/dialogButtonMenu"
+            style="@style/dialog_button"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

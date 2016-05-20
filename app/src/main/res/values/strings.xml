@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">TicTacToe</string>
+    <!-- MainActivity -->
+    <string name="welcome">Welcome to this awesome tic tac toe</string>
+    <string name="your_name">What\'s your name?</string>
+    <string name="Play_offline">Play offline game</string>
+    <string name="Play_online">Play online multiplayer</string>
+    <string name="no_name">No name was inserted</string>
+
+    <!-- GameActivity -->
+    <string name="Player">Player</string>
+    <string name="just_won">just won!</string>
+    <string name="back_to_menu">BACK TO MENU</string>
+    <string name="again_please">NICE, AGAIN PLEASE!</string>
+
+    <!-- WaitingForPlayerActivity -->
+    <string name="waiting_for_player">Waiting for a player</string>
+</resources>

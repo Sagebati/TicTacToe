@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:id="@+id/blabla">
+
+
+   <!-- <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/one"
+        android:background="@drawable/blanc"
+        android:layout_row="1"
+        android:layout_column="3" />
+
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/two"
+        android:background="@drawable/blanc"
+        android:layout_row="1"
+        android:layout_column="5" />
+
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/neine"
+        android:background="@drawable/blanc"
+        android:layout_row="1"
+        android:layout_column="6" />
+
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/three"
+        android:background="@drawable/blanc"
+        android:layout_row="2"
+        android:layout_column="3" />
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/four"
+        android:background="@drawable/blanc"
+        android:layout_row="2"
+        android:layout_column="5" />
+
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/five"
+        android:background="@drawable/blanc"
+        android:padding="20dp"
+        android:layout_row="2"
+        android:layout_column="6" />
+
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/six"
+        android:background="@drawable/blanc"
+        android:layout_row="3"
+        android:layout_column="3" />
+
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/height"
+        android:background="@drawable/blanc"
+        android:layout_row="3"
+        android:layout_column="5" />
+
+    <ImageButton
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+
+        android:id="@+id/seven"
+        android:background="@drawable/blanc"
+        android:layout_row="3"
+        android:layout_column="6" />-->
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/moveTextView"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical|center_horizontal">
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="40dp"
+            android:paddingTop="100dp">
+
+            <ImageButton
+                android:id="@+id/button1"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+
+            <ImageButton
+                android:id="@+id/button2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+
+            <ImageButton
+                android:id="@+id/button3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="40dp">
+
+            <ImageButton
+                android:id="@+id/button4"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"
+                />
+
+            <ImageButton
+                android:id="@+id/button5"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+
+            <ImageButton
+                android:id="@+id/button6"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+        </TableRow>
+
+        <TableRow android:paddingLeft="40dp">
+            <ImageButton
+                android:id="@+id/button7"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+            <ImageButton
+                android:id="@+id/button8"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+            <ImageButton
+                android:id="@+id/button9"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:height="100dp"
+                android:width="100dp"
+                style="@style/game_button"/>
+        </TableRow>
+    </TableLayout>
+
+</GridLayout>
