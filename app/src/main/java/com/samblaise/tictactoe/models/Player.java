@@ -1,68 +1,73 @@
 package com.samblaise.tictactoe.models;
 
+import com.samblaise.tictactoe.utils.JSONSerialisable;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 /**
+ * Project : TicTacToe
+ * ${PACKAGE_NAME}
  * Created by samuel on 20/05/16.
  */
-public class Player {
-    static final String cID = "id";
-    static final String cNOM = "nom";
-    private int id;
-    private String ip;
+public class Player extends JSONSerialisable{
+
+    public static final String cCOULEUR = "couleur";
+    public static final String cNOM = "name";
+    public static final String cID = "_id";
+
+    private String id;
+    private String couleur;
     private String nom;
 
-    public Player(int id, String ip, String nom){
+
+    public Player(String nom) {
+        this("", "",nom);
+    }
+
+    public Player(String couleur, String nom){
+        this("",couleur,nom);
+    }
+
+    public Player(String id, String couleur, String nom){
         this.id = id;
-        this.ip = ip;
+        this.couleur = couleur;
         this.nom=  nom;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Player)) return false;
-        Player player = (Player) o;
-        return Objects.equals(id, player.id) &&
-                Objects.equals(ip, player.ip) &&
-                Objects.equals(nom, player.nom);
+    public Player(JSONObject jo) throws JSONException {
+        this.nom = jo.getString(cNOM);
+        this.id = jo.getString(cID);
+        this.couleur = jo.getString(cCOULEUR);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, ip, nom);
+    public String toJSONString() {
+        return "{\'"+cID+"\':\'"+this.id+"\'," +
+                "\'"+cCOULEUR+"\':\'"+this.couleur+"\'," +
+                "\'"+cNOM+"\':\'"+this.nom+"\'}";
     }
 
     @Override
-    public String toString() {
-        return "Player{" +
-                "id=" + id +
-                ", ip='" + ip + '\'' +
-                ", nom='" + nom + '\'' +
-                '}';
+    public String toString(){
+        return toJSONString();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
+    public String getCouleur() {
+        return couleur;
     }
 
     public String getNom() {
         return nom;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setCouleur(String couleur) {
+        this.couleur = couleur;
     }
 }

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -14,8 +15,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.samblaise.tictactoe.R;
-import com.samblaise.tictactoe.activities.old.Service_ConnectToDB;
+import com.samblaise.tictactoe.network.Service_ConnectToDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,22 +32,22 @@ import java.util.ArrayList;
  * Created by samuel on 10/08/15.
  */
 public class WaitingForPlayerActivity extends Activity {
-    ImageButton[][] buttons;
-    Button start;
-    String name;
-    String namep2;
-    Integer count;
-    ArrayList<String> hits;
-    TextView tvWaiting;
-    Integer idPlayer1;
-    Integer idPlayer2;
-    String var;
-    int i;
-    int j;
-    TextView name1;
-    TextView name2;
-    Service_ConnectToDB service_connectToDB;
-    ServiceConnection serviceConnection = new ServiceConnection() {
+    private ImageButton[][] buttons;
+    private Button start;
+    private String name;
+    private String namep2;
+    private Integer count;
+    private ArrayList<String> hits;
+    private TextView tvWaiting;
+    private Integer idPlayer1;
+    private Integer idPlayer2;
+    private String var;
+    private int i;
+    private int j;
+    private TextView name1;
+    private TextView name2;
+    private Service_ConnectToDB service_connectToDB;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             service_connectToDB = ((Service_ConnectToDB.MyBinder) service).getMyService();
@@ -53,6 +58,11 @@ public class WaitingForPlayerActivity extends Activity {
             service_connectToDB = null;
         }
     };
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +118,9 @@ public class WaitingForPlayerActivity extends Activity {
                 initWait(name);
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private boolean checkForCompleted(String symbol) {
@@ -185,11 +198,10 @@ public class WaitingForPlayerActivity extends Activity {
         if (this.name.equals(name2)) {
             name2.setText(this.name);
         }
-        if (!this.name.equals(namep2)){
+        if (!this.name.equals(namep2)) {
             name1.setText(this.name);
             name2.setText(namep2);
         }
-        service_connectToDB.postBlob(idPlayer1, idPlayer2, hits);
         tvWaiting.setText("Player Ready !");
     }
 
@@ -201,20 +213,52 @@ public class WaitingForPlayerActivity extends Activity {
     }
 
     public void waitingPlay() {
-        while (hits == service_connectToDB.getBlob(idPlayer1, idPlayer2)) {
-
-        }
         buttons[Character.getNumericValue(hits.get(count).charAt(0))][Character.getNumericValue(hits.get(count).charAt(2))].callOnClick();
     }
 
     public void played(int x, int y) {
         hits.add(x + "" + y);
-        service_connectToDB.postBlob(idPlayer1, idPlayer2, hits);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         unbindService(serviceConnection);
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("WaitingForPlayer Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://host/path"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }

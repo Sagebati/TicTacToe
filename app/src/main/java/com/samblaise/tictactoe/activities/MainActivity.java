@@ -15,19 +15,19 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.samblaise.tictactoe.R;
-import com.samblaise.tictactoe.activities.old.Service_ConnectToDB;
+import com.samblaise.tictactoe.network.Service_ConnectToDB;
 
 
 public class MainActivity extends Activity {
     public static String PACKAGE_NAME;
-    public EditText et;
-    ImageButton b;
-    Button play;
-    Boolean choice;
-    Button multilayer;
-    SharedPreferences prefs;
-    Service_ConnectToDB service_connectToDB;
-    ServiceConnection serviceConnection = new ServiceConnection() {
+    private EditText et;
+    private ImageButton b;
+    private Button play;
+    private Boolean choice;
+    private Button multilayer;
+    private SharedPreferences prefs;
+    private Service_ConnectToDB service_connectToDB;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             service_connectToDB = ((Service_ConnectToDB.MyBinder) service).getMyService();
@@ -70,6 +70,10 @@ public class MainActivity extends Activity {
                 }
             }
         });
+
+        /**
+         * Click Listener on the button play
+         */
         play.setOnClickListener(new View.OnClickListener() {
 
             @Override

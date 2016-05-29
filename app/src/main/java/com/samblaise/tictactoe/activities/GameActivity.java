@@ -13,11 +13,10 @@ import com.samblaise.tictactoe.R;
 
 
 public class GameActivity extends Activity {
-    ImageButton[][] buttons;
-    String name;
-    String var;
-    int i;
-    int j;
+    private ImageButton[][] buttons;
+    private String name;
+    private String var;
+    private int i,j;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

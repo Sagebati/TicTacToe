@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.samblaise.tictactoe.R;
-import com.samblaise.tictactoe.activities.old.Service_ConnectToDB;
+import com.samblaise.tictactoe.network.Service_ConnectToDB;
 
 import java.util.Map;
 
@@ -24,14 +24,14 @@ import java.util.Map;
  * Created by samuel on 09/08/15.
  */
 public class ListPlayersActivity extends Activity {
-    Service_ConnectToDB service_connectToDB;
-    String name;
-    ProgressBar progressBar;
-    ListView listView;
-    ArrayAdapter<String> adapter;
-    Map<Integer, String> players;
-    Button create;
-    ServiceConnection serviceConnection = new ServiceConnection() {
+    private Service_ConnectToDB service_connectToDB;
+    private String name;
+    private ProgressBar progressBar;
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
+    private Map<Integer, String> players;
+    private Button create;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             service_connectToDB = ((Service_ConnectToDB.MyBinder) service).getMyService();
@@ -47,6 +47,7 @@ public class ListPlayersActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listplayers);
+        /* Get the extras og the main activity */
         name = getIntent().getExtras().getString("name");
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         create = (Button) findViewById(R.id.create);
@@ -68,7 +69,7 @@ public class ListPlayersActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                service_connectToDB.joinAGame(name, getKeyFromValue(players, adapter.getItem(position)));
+                service_connectToDB.joinAGame(name);
                 Intent intent = new Intent(getApplicationContext(), WaitingForPlayerActivity.class);
                 intent.putExtra("name",name);
                 startActivity(intent);
@@ -77,7 +78,7 @@ public class ListPlayersActivity extends Activity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                service_connectToDB.addLineOnGame(name);
+                service_connectToDB.addLineOnGame();
                 Intent intent = new Intent(getApplicationContext(), WaitingForPlayerActivity.class);
                 intent.putExtra("name", name);
                 startActivity(intent);
@@ -91,14 +92,6 @@ public class ListPlayersActivity extends Activity {
         Intent i = new Intent(getApplicationContext(), Service_ConnectToDB.class);
         bindService(i, serviceConnection, BIND_AUTO_CREATE);
 
-    }
-    public static Integer getKeyFromValue(Map<Integer,String> hm, Object value) {
-        for (Integer o : hm.keySet()) {
-            if (hm.get(o).equals(value)) {
-                return o;
-            }
-        }
-        return null;
     }
 
     @Override

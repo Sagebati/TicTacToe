@@ -1,4 +1,4 @@
-package com.samblaise.tictactoe.activities.old;
+package com.samblaise.tictactoe.network;
 
 import android.os.AsyncTask;
 
@@ -8,17 +8,22 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by samuel on 12/08/15.
+ * Class who can add lines on the DB
+ * Created by samuel on 10/08/15.
  */
-public class TaskAddPlayer extends AsyncTask<Object, Void, Void> {
+//TODO Complete this class
+class TaskAddLineOnGames extends AsyncTask<Object, Integer, Boolean> {
+    private URL addLinesURL;
+    private Boolean finish = false;
+    private HttpURLConnection connection;
+
     @Override
-    protected Void doInBackground(Object... params) {
-        HttpURLConnection connection;
-        URL urlAddPlayer = (URL) params[0];
+    protected Boolean doInBackground(Object... params) {
+        addLinesURL = (URL) params[0];
         String name = (String) params[1];
         String data = "name=" + name;
         try {
-            connection = (HttpURLConnection) urlAddPlayer.openConnection();
+            connection = (HttpURLConnection) addLinesURL.openConnection();
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestMethod("POST");
@@ -32,9 +37,10 @@ public class TaskAddPlayer extends AsyncTask<Object, Void, Void> {
             System.out.println("Response Code : " + responseCode);
 
             connection.disconnect();
+            finish = true;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return finish;
     }
 }

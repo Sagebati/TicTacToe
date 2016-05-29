@@ -1,41 +1,46 @@
 package com.samblaise.tictactoe.models;
 
-import java.util.Arrays;
-import java.util.Objects;
+import com.samblaise.tictactoe.utils.JSONSerialisable;
 
-public class Move {
-    final int[] matrixMove;
-    Player player;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    public Move(int x, int y, Player player) {
-        this.matrixMove = new int[2];
-        this.matrixMove[0] = x; this.matrixMove[1] = y;
-        this.player = player;
+/**
+ * Project : TicTacToe
+ * com.samblaise.tictactoe.models
+ * Created by sam on 29/05/16.
+ *
+ * Class who represent a move on the tictactoe
+ */
+
+public class Move extends JSONSerialisable {
+    private final int x,y;
+    private final String playerId;
+
+    /**
+     * Constructor
+     * @param x cord x
+     * @param y cord y
+     */
+    public Move(int x, int y,String playerId) {
+        this.x = x;
+        this.y = y;
+        this.playerId = playerId;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Move)) return false;
-        Move move = (Move) o;
-        return Arrays.equals(matrixMove, move.matrixMove) &&
-                Objects.equals(player, move.player);
+    public String toJSONString() {
+        String res="";
+        try {
+            res = new JSONObject().put("player", playerId).put("x",x).put("y",y).toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return res;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(matrixMove, player);
-    }
-
-    public int[] getMatrixMove() {
-        return matrixMove;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
+    public String getPlayerId() {
+        return playerId;
     }
 }

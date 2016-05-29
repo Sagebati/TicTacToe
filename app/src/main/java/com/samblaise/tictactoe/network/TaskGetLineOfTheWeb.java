@@ -1,47 +1,43 @@
-package com.samblaise.tictactoe.activities.old;
+package com.samblaise.tictactoe.network;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 
 /**
+ * Project : TicTacToe
+ * ${PACKAGE_NAME}
  * Created by samuel on 12/08/15.
  */
-public class TaskGetBlob extends AsyncTask<Object, Void, String> {
+public class TaskGetLineOfTheWeb extends AsyncTask<Object, Void, JSONObject> {
+
     @Override
-    protected String doInBackground(Object... params) {
-        String result = null;
+    protected JSONObject doInBackground(Object... params) {
+        JSONObject jsonObject;
         HttpURLConnection connection;
-        URL urlGetBlob = (URL) params[0];
-        Integer idPlayer1 = (Integer) params[1];
-        Integer idPlayer2 = (Integer) params[2];
-        String data = null;
-        boolean finish = false;
+        URL UrlGetLineOfGame = (URL) params[0];
+        String namep1 = (String) params[1];
+        String data = "namep1=" + namep1;
+        Boolean finish = false;
         while (!finish) {
             try {
-                data = "idPlayer1=" + URLEncoder.encode(idPlayer1.toString(), "UTF-8") +
-                        "&idPlayer2=" + URLEncoder.encode(idPlayer2.toString(), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            try {
-                connection = (HttpURLConnection) urlGetBlob.openConnection();
+                connection = (HttpURLConnection) UrlGetLineOfGame.openConnection();
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setRequestMethod("POST");
 
                 DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-                if (data != null) {
-                    outputStream.writeBytes(data);
-                }
+                outputStream.writeBytes(data);
                 outputStream.flush();
                 outputStream.close();
 
@@ -56,14 +52,18 @@ public class TaskGetBlob extends AsyncTask<Object, Void, String> {
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
-                result = response.toString();
-                if (!result.equals("")) {
+                JSONArray jsonArray = new JSONArray(response.toString());
+                 jsonObject = jsonArray.getJSONObject(0);
+                if (jsonObject.getString("idPlayer2") != null) {
                     finish = true;
+                    return jsonObject;
                 }
-            } catch (IOException e) {
+                in.close();
+                connection.disconnect();
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }
-        return result;
+        return null;
     }
 }
