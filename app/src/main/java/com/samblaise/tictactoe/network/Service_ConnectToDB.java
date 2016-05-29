@@ -11,6 +11,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.samblaise.tictactoe.models.Game;
 import com.samblaise.tictactoe.models.Player;
@@ -20,6 +22,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -28,17 +33,19 @@ import java.util.Map;
  */
 public class Service_ConnectToDB extends Service {
     //TODO Finish this class
-    private Map<String,Player> idAndPlayers;
+    private Map<String, Player> playerMap;
     private Player me;
     private RequestQueue requestQueue;
     private Game game;
+    private RequestFuture<String> requestFuture;
+    private Boolean waiting;
     Urls urls;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
-        idAndPlayers = new HashMap<>();
+        playerMap = new HashMap<>();
         requestQueue = Volley.newRequestQueue(getApplicationContext());
     }
 
@@ -78,7 +85,7 @@ public class Service_ConnectToDB extends Service {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getApplicationContext(),"Error of connection", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Error of connection", Toast.LENGTH_SHORT).show();
                         }
                     }
             );
@@ -90,6 +97,7 @@ public class Service_ConnectToDB extends Service {
 
     /**
      * Method to remove lines on the table games on the bd
+     *
      * @param id of the game to del
      */
     public void removeLineOnGame(Integer id) {
@@ -98,6 +106,7 @@ public class Service_ConnectToDB extends Service {
 
     /**
      * Method for joining a game
+     *
      * @param name name on the player
      */
     public void joinAGame(String name) {
@@ -106,40 +115,57 @@ public class Service_ConnectToDB extends Service {
 
     /**
      * Add à player on the db
+     *
      * @param name name of the player or nickname
      */
     public void addPlayer(String name) {
+        requestFuture = RequestFuture.newFuture();
         JsonObjectRequest jsonObjectRequest = null;
-        try {
-            JSONObject jsonObject = new JSONObject(new Player(name).toJSONString());
-            jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,Urls.PLAYER.getUrlStr(),jsonObject,
-                    new Response.Listener<JSONObject>(){
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                idAndPlayers.put(response.getString(Player.cID),new Player(response));
-                                me = new Player(response);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getApplicationContext(),"Error of connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } catch (JSONException e) {
-            e.printStackTrace();
-            jsonObjectRequest = null;
-        }
-        this.requestQueue.add(jsonObjectRequest);
+//        try {
+//            JSONObject jsonObject = new JSONObject(new Player(name).toJSONString());
+//            jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,Urls.PLAYER.getUrlStr(),jsonObject,
+//                    new Response.Listener<JSONObject>(){
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            try {
+//                                playerMap.put(response.getString(Player.cID),new Player(response));
+//                                me = new Player(response);
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    },
+//                    new Response.ErrorListener(){
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            Toast.makeText(getApplicationContext(),"Error of connection", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        requestQueue.add(jsonObjectRequest);
+
+//        String  stringPost = null;
+//        try {
+//            stringPost = new JSONObject(new Player(name).toJSONString()).toString();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST,Urls.PLAYER.getUrlStr(),stringPost,requestFuture,requestFuture);
+//        this.requestQueue.add(jsonObjectRequest);
+//        try {
+//            me = new Player(requestFuture.get(100, TimeUnit.SECONDS));
+//        } catch (InterruptedException | ExecutionException | JSONException | TimeoutException e) {
+//            e.printStackTrace();
+//            Toast.makeText(this.getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+//        }
 
     }
 
-    public JSONObject waitToGetJSON(String namep1) {
-        //TODO
+    public JSONObject waitSrvRes() {
+        RequestFuture<JSONObject> requestFuture = RequestFuture.newFuture();
         return null;
     }
 

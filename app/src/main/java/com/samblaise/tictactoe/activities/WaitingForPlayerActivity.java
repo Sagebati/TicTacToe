@@ -187,7 +187,7 @@ public class WaitingForPlayerActivity extends Activity {
 
     public void initWait(String name) {
         JSONObject jsonObject;
-        jsonObject = service_connectToDB.waitToGetJSON(name);
+        jsonObject = service_connectToDB.waitSrvRes();
         try {
             idPlayer1 = jsonObject.getInt("idPlayer1");
             idPlayer2 = jsonObject.getInt("idPlayer2");

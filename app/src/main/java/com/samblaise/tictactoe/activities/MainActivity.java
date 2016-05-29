@@ -8,6 +8,9 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,10 +65,13 @@ public class MainActivity extends Activity {
                 if (et.getText().toString().equals("")) {
                     Toast.makeText(getApplicationContext(), no_name, Toast.LENGTH_SHORT).show();
                 } else {
+                    long t = System.currentTimeMillis();
                     service_connectToDB.addPlayer(et.getText().toString());
+                    Log.w("TIME EX", String.valueOf(t - System.currentTimeMillis()));
                     prefs.edit().putString(PACKAGE_NAME, et.getText().toString()).apply();
                     Intent intent = new Intent(getApplicationContext(), ListPlayersActivity.class);
-                    intent.putExtra("name", et.getText().toString());
+//                    intent.putExtra("myId", service_connectToDB.getMe().getId());
+                    intent.putExtra("myId", "test");
                     startActivity(intent);
                 }
             }
