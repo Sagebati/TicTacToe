@@ -1,11 +1,16 @@
 package com.samblaise.tictactoe.models;
 
+import android.test.mock.MockApplication;
+
 import com.samblaise.tictactoe.utils.JSONSerialisable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Project : TicTacToe
@@ -48,6 +53,23 @@ public class Player extends JSONSerialisable{
         return "{\'"+cID+"\':\'"+this.id+"\'," +
                 "\'"+cCOULEUR+"\':\'"+this.couleur+"\'," +
                 "\'"+cNOM+"\':\'"+this.nom+"\'}";
+    }
+    @Override
+    public Map<String,String> getParams(){
+        HashMap<String,String> hp = new HashMap<>();
+        hp.put(cID, id);
+        hp.put(cCOULEUR, couleur);
+        hp.put(cNOM,nom);
+        return hp;
+    }
+
+    @Override
+    public ArrayList<String> getJSONNames() {
+        ArrayList<String> al = new ArrayList<>();
+        al.add(cID);
+        al.add(cNOM);
+        al.add(cCOULEUR);
+        return al;
     }
 
     @Override

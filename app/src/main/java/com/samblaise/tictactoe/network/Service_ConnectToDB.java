@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -37,9 +38,8 @@ public class Service_ConnectToDB extends Service {
     private Player me;
     private RequestQueue requestQueue;
     private Game game;
-    private RequestFuture<String> requestFuture;
+    private RequestFuture<JSONObject> requestFuture;
     private Boolean waiting;
-    Urls urls;
 
 
     @Override
@@ -120,7 +120,18 @@ public class Service_ConnectToDB extends Service {
      */
     public void addPlayer(String name) {
         requestFuture = RequestFuture.newFuture();
-        JsonObjectRequest jsonObjectRequest = null;
+        CustomRequestJSON customRequestJSON = new CustomRequestJSON(Request.Method.POST,Urls.PLAYER.getUrlStr(),new Player(name).getParams(), requestFuture, requestFuture);
+
+        requestQueue.add(customRequestJSON);
+
+        try {
+            me = new Player(requestFuture.get());
+        } catch (JSONException | InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            getMe();
+        }
+//        JsonObjectRequest jsonObjectRequest = null;
 //        try {
 //            JSONObject jsonObject = new JSONObject(new Player(name).toJSONString());
 //            jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,Urls.PLAYER.getUrlStr(),jsonObject,

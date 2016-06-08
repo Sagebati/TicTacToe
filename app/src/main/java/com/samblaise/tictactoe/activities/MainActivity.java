@@ -1,6 +1,7 @@
 package com.samblaise.tictactoe.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.samblaise.tictactoe.R;
@@ -121,6 +123,22 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         unbindService(serviceConnection);
+    }
+
+    public  void chargement(){
+        ProgressDialog myProgressDialog = ProgressDialog.show(MainActivity.this,
+                "", "Chargement", true);
+        final Runnable r = new Runnable(){
+            Service_ConnectToDB s;
+
+            public Runnable(Service_ConnectToDB){
+                s = service_connectToDB;
+            }
+            @Override
+            public void run() {
+
+            }
+        }
     }
 }
 

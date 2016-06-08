@@ -4,6 +4,9 @@ import com.samblaise.tictactoe.utils.JSONSerialisable;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class Moves extends JSONSerialisable{
     private static final int nbrCases = 9;
     private final Move[] moves;
@@ -45,5 +48,15 @@ public class Moves extends JSONSerialisable{
             res.put(moves[i]);
         }
         return res.toString();
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> getJSONNames() {
+        return null;
     }
 }

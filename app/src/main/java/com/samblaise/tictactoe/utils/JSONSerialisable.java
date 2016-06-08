@@ -1,5 +1,9 @@
 package com.samblaise.tictactoe.utils;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * Project : TicTacToe
  * com.samblaise.tictactoe.utils
@@ -17,4 +21,8 @@ public abstract class JSONSerialisable {
     public String toString() {
         return toJSONString();
     }
+
+    public abstract Map<String,String> getParams();
+
+    public abstract ArrayList<String> getJSONNames();
 }

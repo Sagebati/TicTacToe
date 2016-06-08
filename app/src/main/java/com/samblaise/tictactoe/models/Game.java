@@ -6,6 +6,9 @@ import com.samblaise.tictactoe.utils.JSONSerialisable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * Project : TicTacToe
  * com.samblaise.tictactoe.models
@@ -60,6 +63,16 @@ public class Game extends JSONSerialisable {
             e.printStackTrace();
         }
         return res;
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> getJSONNames() {
+        return null;
     }
 
     public String getGameId() {
