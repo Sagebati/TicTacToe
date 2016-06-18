@@ -1,6 +1,5 @@
-package com.samblaise.tictactoe.models;
+package com.samblaise.tictactoe.Classes;
 
-import com.google.android.gms.common.api.BooleanResult;
 import com.samblaise.tictactoe.utils.JSONSerialisable;
 
 import org.json.JSONException;

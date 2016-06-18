@@ -1,4 +1,4 @@
-package com.samblaise.tictactoe.models;
+package com.samblaise.tictactoe.Classes;
 
 import com.samblaise.tictactoe.utils.JSONSerialisable;
 

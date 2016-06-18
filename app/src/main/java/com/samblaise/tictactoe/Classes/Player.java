@@ -1,4 +1,4 @@
-package com.samblaise.tictactoe.models;
+package com.samblaise.tictactoe.Classes;
 
 import android.test.mock.MockApplication;
 
@@ -91,5 +91,21 @@ public class Player extends JSONSerialisable{
 
     public void setCouleur(String couleur) {
         this.couleur = couleur;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Player player = (Player) o;
+
+        return id.equals(player.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

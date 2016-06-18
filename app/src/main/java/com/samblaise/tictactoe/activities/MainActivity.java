@@ -68,13 +68,8 @@ public class MainActivity extends Activity {
                     Toast.makeText(getApplicationContext(), no_name, Toast.LENGTH_SHORT).show();
                 } else {
                     long t = System.currentTimeMillis();
-                    service_connectToDB.addPlayer(et.getText().toString());
-                    Log.w("TIME EX", String.valueOf(t - System.currentTimeMillis()));
-                    prefs.edit().putString(PACKAGE_NAME, et.getText().toString()).apply();
-                    Intent intent = new Intent(getApplicationContext(), ListPlayersActivity.class);
-//                    intent.putExtra("myId", service_connectToDB.getMe().getId());
-                    intent.putExtra("myId", "test");
-                    startActivity(intent);
+                    service_connectToDB.addPlayer(MainActivity.this, et.getText().toString());
+
                 }
             }
         });
@@ -112,6 +107,14 @@ public class MainActivity extends Activity {
         });
     }
 
+    public void changeActivity(){
+        prefs.edit().putString(PACKAGE_NAME, et.getText().toString()).apply();
+        Intent intent = new Intent(getApplicationContext(), ListPlayersActivity.class);
+        intent.putExtra("myId", service_connectToDB.getMe().getId());
+        intent.putExtra("myId", "test");
+        startActivity(intent);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -125,21 +128,6 @@ public class MainActivity extends Activity {
         unbindService(serviceConnection);
     }
 
-    public  void chargement(){
-        ProgressDialog myProgressDialog = ProgressDialog.show(MainActivity.this,
-                "", "Chargement", true);
-        final Runnable r = new Runnable(){
-            Service_ConnectToDB s;
-
-            public Runnable(Service_ConnectToDB){
-                s = service_connectToDB;
-            }
-            @Override
-            public void run() {
-
-            }
-        }
-    }
 }
 
 

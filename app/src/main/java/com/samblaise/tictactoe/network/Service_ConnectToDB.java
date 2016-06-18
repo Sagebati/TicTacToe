@@ -4,28 +4,26 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.samblaise.tictactoe.models.Game;
-import com.samblaise.tictactoe.models.Player;
+import com.samblaise.tictactoe.activities.ListPlayersActivity;
+import com.samblaise.tictactoe.activities.MainActivity;
+import com.samblaise.tictactoe.Classes.Game;
+import com.samblaise.tictactoe.Classes.Player;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -34,18 +32,18 @@ import java.util.concurrent.TimeoutException;
  */
 public class Service_ConnectToDB extends Service {
     //TODO Finish this class
-    private Map<String, Player> playerMap;
+    private  Map<String, Player> playerMap;
+    private  Map<String, Player> cache;
     private Player me;
     private RequestQueue requestQueue;
     private Game game;
-    private RequestFuture<JSONObject> requestFuture;
-    private Boolean waiting;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         playerMap = new HashMap<>();
+        cache = new HashMap<>();
         requestQueue = Volley.newRequestQueue(getApplicationContext());
     }
 
@@ -59,15 +57,26 @@ public class Service_ConnectToDB extends Service {
      *
      * @return Map<StringURL> who contains all players able to play
      */
-    public Map<Integer, String> getNamesAndIp() {
-        //TODO
-        return null;
+    public Map<String,Player> getPlayerOnline(ListPlayersActivity lpa) {
+        if (playerMap.isEmpty()){
+            getAllPlayers(lpa);
+            return playerMap;
+        }else {
+            getAllPlayers(lpa);
+            if (playerMap.equals(cache)){
+                return cache;
+            }else{
+                cache.clear();
+                cache.putAll(playerMap);
+                return cache;
+            }
+        }
     }
 
     /**
      * Method who add players on the web service
      */
-    public void addLineOnGame() {
+    public void connect() {
         JsonObjectRequest jsonObjectRequest = null;
         try {
             JSONObject jsonObject = new JSONObject().put(Game.cIDPLAYER1, me.getId());
@@ -118,66 +127,32 @@ public class Service_ConnectToDB extends Service {
      *
      * @param name name of the player or nickname
      */
-    public void addPlayer(String name) {
-        requestFuture = RequestFuture.newFuture();
-        CustomRequestJSON customRequestJSON = new CustomRequestJSON(Request.Method.POST,Urls.PLAYER.getUrlStr(),new Player(name).getParams(), requestFuture, requestFuture);
-
-        requestQueue.add(customRequestJSON);
-
+    public void addPlayer(final MainActivity ma, String name) {
+        JsonObjectRequest jsonObjectRequest = null;
         try {
-            me = new Player(requestFuture.get());
-        } catch (JSONException | InterruptedException | ExecutionException e) {
+            JSONObject jsonObject = new JSONObject(new Player(name).toJSONString());
+            jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,Urls.PLAYER.getUrlStr(),jsonObject,
+                    new Response.Listener<JSONObject>(){
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                me = new Player(response);
+                                ma.changeActivity();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(),"Error of connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            getMe();
         }
-//        JsonObjectRequest jsonObjectRequest = null;
-//        try {
-//            JSONObject jsonObject = new JSONObject(new Player(name).toJSONString());
-//            jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,Urls.PLAYER.getUrlStr(),jsonObject,
-//                    new Response.Listener<JSONObject>(){
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            try {
-//                                playerMap.put(response.getString(Player.cID),new Player(response));
-//                                me = new Player(response);
-//
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    },
-//                    new Response.ErrorListener(){
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            Toast.makeText(getApplicationContext(),"Error of connection", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        requestQueue.add(jsonObjectRequest);
-
-//        String  stringPost = null;
-//        try {
-//            stringPost = new JSONObject(new Player(name).toJSONString()).toString();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST,Urls.PLAYER.getUrlStr(),stringPost,requestFuture,requestFuture);
-//        this.requestQueue.add(jsonObjectRequest);
-//        try {
-//            me = new Player(requestFuture.get(100, TimeUnit.SECONDS));
-//        } catch (InterruptedException | ExecutionException | JSONException | TimeoutException e) {
-//            e.printStackTrace();
-//            Toast.makeText(this.getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
-//        }
-
-    }
-
-    public JSONObject waitSrvRes() {
-        RequestFuture<JSONObject> requestFuture = RequestFuture.newFuture();
-        return null;
+        requestQueue.add(jsonObjectRequest);
     }
 
     public Game getGame() {
@@ -190,30 +165,33 @@ public class Service_ConnectToDB extends Service {
         }
     }
 
-    /*public void getAllPlayers(){
-         JsonObjectRequest jsonObjectRequest;
-        try {
-            JSONObject jsonObject = new JSONObject(new Player("").toJSONString());
+    private void getAllPlayers(final ListPlayersActivity lpa){
+         JsonArrayRequest jsonObjectRequest;
 
-            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,Urls.PLAYER.getUrlStr(),jsonObject,
-                    new Response.Listener<JSONObject>(){
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+        jsonObjectRequest = new JsonArrayRequest(Request.Method.GET,Urls.PLAYER.getUrlStr(),null,
+                new Response.Listener<JSONArray>(){
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        playerMap.clear();
+                        for (int i = 0;!response.isNull(i); i++) {
+                            try {
+                                JSONObject jo = response.getJSONObject(i);
+                                playerMap.put(jo.getString(Player.cID), new Player(jo));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getApplicationContext(),"Error of connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } catch (JSONException e) {
-            e.printStackTrace();
-            jsonObjectRequest = null;
-        }
+                        lpa.listPlayersReady();
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),"Error of connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
         this.requestQueue.add(jsonObjectRequest);
-    }*/
+    }
 
     public Player getMe() {
         return me;

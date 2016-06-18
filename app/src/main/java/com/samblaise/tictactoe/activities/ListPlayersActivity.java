@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.samblaise.tictactoe.R;
+import com.samblaise.tictactoe.Classes.Player;
 import com.samblaise.tictactoe.network.Service_ConnectToDB;
 
 import java.util.Map;
@@ -31,7 +32,7 @@ public class ListPlayersActivity extends Activity {
     private ProgressBar progressBar;
     private ListView listView;
     private ArrayAdapter<String> adapter;
-    private Map<Integer, String> players;
+    private Map<String, Player> players;
     private Button create;
 
     /** Connecting the service  */
@@ -92,10 +93,8 @@ public class ListPlayersActivity extends Activity {
         progressBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                players = service_connectToDB.getNamesAndIp();
-                adapter.clear();
-                adapter.addAll(players.values());
-                adapter.notifyDataSetInvalidated();
+                players = service_connectToDB.getPlayerOnline(ListPlayersActivity.this);
+
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,11 +109,19 @@ public class ListPlayersActivity extends Activity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                service_connectToDB.addLineOnGame();
+                service_connectToDB.connect();
                 Intent intent = new Intent(getApplicationContext(), WaitingForPlayerActivity.class);
                 intent.putExtra("myId", myId);
                 startActivity(intent);
             }
         });
+    }
+
+    public  void listPlayersReady(){
+        adapter.clear();
+        for (Map.Entry<String, Player> e: players.entrySet() ){
+            adapter.add(e.getValue().getNom());
+        }
+        adapter.notifyDataSetInvalidated();
     }
 }

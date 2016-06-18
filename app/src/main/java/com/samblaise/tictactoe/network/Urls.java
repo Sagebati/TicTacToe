@@ -2,6 +2,7 @@ package com.samblaise.tictactoe.network;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Project : TicTacToe
@@ -33,6 +34,16 @@ enum Urls {
         return res;
     }
     public String getUrlStr(){
-        return PROT+LOCALHOST+PORT+this.url;
+        return  PROT+LOCALHOST+PORT+this.url;
+    }
+    public static String paramToStr(Map<String,String> p){
+        StringBuilder sb = new StringBuilder();
+        for (String s :
+                p.keySet()) {
+            sb.append(s);
+            sb.append('/');
+            sb.append(p.get(s));
+        }
+        return  sb.toString();
     }
 }
